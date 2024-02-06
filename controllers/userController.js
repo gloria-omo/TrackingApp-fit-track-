@@ -69,7 +69,7 @@ exports.logIn = async(req,res)=>{
         })
       }
       req.session.user = user;
-      
+
       res.status(200).json({
             message:"logIn successfully"
         })
@@ -81,3 +81,25 @@ exports.logIn = async(req,res)=>{
         })
     }
 }
+
+exports.getAll = async(req,res)=>{
+    try{
+        // const id = req.session.user._id;
+        const allUser = await userModel.find();
+        if(user.length === 0){
+            return res.status(200).json({
+                message:"there are No user found"
+            })
+        }
+        res.status(200).json({
+            message:`There are ${user.length} user `,
+            data:allUser
+        })
+
+    }catch(error){
+        res.status(500).json({
+           error:`${error.message}` 
+        })
+    }
+}
+
