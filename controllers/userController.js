@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 
 exports.signUp = async (req,res)=>{
     try{
-        const { companyName,email,password,confrimPassword } = req.body
+        const { companyName,email,phoneNumber,password,confrimPassword } = req.body
         const file = req.file.path
 
         const checkemail = await userModel.findOne({email});
@@ -34,6 +34,7 @@ exports.signUp = async (req,res)=>{
        const user = await userModel.create({
         companyName,
         email,
+        phoneNumber,
         password:hash,
         profilePicture: result.secure_url
        })
@@ -47,6 +48,36 @@ exports.signUp = async (req,res)=>{
         res.status(500).json({
             // error:`unable to sign-up ${error.message}`
             error: error.message
+        })
+    }
+}
+
+exports.logIn = async(req,res)=>{
+    try{
+        const {email,password} = res.body;
+
+      const user = userModel.findOne({email});
+      if(!user){
+        return res.status(404).json({
+            message:"user not found"
+        })
+      }
+      const checkPassword = bcrypt.compareSync(password,user.password)
+      if(!checkPassword){
+        return res.status(401).json({
+            message:"incorrect password"
+        })
+      }
+      req.session.user = user;
+      
+      res.status(200).json({
+            message:"logIn successfully"
+        })
+      
+
+    }catch(error){
+        res.status(500),json({
+            error:error.message
         })
     }
 }
