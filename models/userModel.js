@@ -19,8 +19,12 @@ const userSchema = new mongoose.Schema({
     },
     profilePicture:{
         type:String
+    },
+    isVerify:{
+        type:Boolean,
+        default:false
     }
-})
+},{timestamps:true})
 
 const userModel = mongoose.model("user",userSchema);
 
