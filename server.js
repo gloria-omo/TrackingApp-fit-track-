@@ -3,10 +3,12 @@ const router = require("./routers/userRouter");
 const multer = require("./helpers/multer");
 const session = require("express-session");
 require("dotenv").config();
+const cors = require("cors");
 require("./config");
 
 
 const app = express();
+app.use(cors({origin:"*"}))
 app.use(express.json());
 
 app.use(session({
