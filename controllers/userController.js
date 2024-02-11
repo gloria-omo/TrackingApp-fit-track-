@@ -2,6 +2,7 @@ const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const cloudinary = require("../helpers/cloudinary");
 const upload = require("../helpers/multer");
+// const session = require("express-session");
 const jwt = require("jsonwebtoken");
 const generateDynamicEmail = require("../helpers/index");
 const sendEmail = require("../helpers/email");
