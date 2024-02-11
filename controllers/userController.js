@@ -10,7 +10,10 @@ require('dotenv').config()
 exports.signUp = async (req,res)=>{
     try{
         const { companyName,email,phoneNumber,password,confrimPassword } = req.body
-        const file = req.file.path
+        const file = req.file.path;
+
+        const result = await cloudinary.uploader.upload(file);
+       console.log(result);
 
         const checkemail = await userModel.findOne({email});
         // console.log(checkemail)
@@ -31,7 +34,6 @@ exports.signUp = async (req,res)=>{
        const salt = bcrypt.genSaltSync(10);
        const hash = bcrypt.hashSync(password,salt);
 
-       const result = await cloudinary.uploader.upload(file);
 
        const user = await userModel.create({
         companyName,
@@ -45,7 +47,7 @@ exports.signUp = async (req,res)=>{
        const link = `${req.protocol}://${req.get('host')}/api/v1/verify-email/${user._id}`;
     //    console.log(link)
 
-        const html = generateDynamicEmail(link, user.companyName.toUpperCase());
+        const html =await generateDynamicEmail(link, user.companyName.toUpperCase());
         await sendEmail({
             email: user.email,
             subject:'Kindly verify your account',

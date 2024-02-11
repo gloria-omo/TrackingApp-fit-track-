@@ -7,7 +7,7 @@ const router = express.Router();
 
 
 
-router.post("/sign-up",validation,uploader.single("profilePicture"),signUp);
+router.post("/sign-up",uploader.single("profilePicture"),validation,signUp);
 router.post("/log-in",logIn);
 router.get("/get-all",isloggedIn,getAll);
 router.get("/log-in",isloggedIn,logOut);
