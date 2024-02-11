@@ -8,11 +8,11 @@ const router = express.Router();
 
 
 router.post("/sign-up",uploader.single("profilePicture"),validation,signUp);
-router.post("/log-in",logIn);
-router.get("/get-all",isloggedIn,getAll);
-router.get("/log-in",isloggedIn,logOut);
-router.get("/verify-email/:id",verify);
-router.post("/forgot-password",forgotPassword);
-router.post("/reset-password/:token",resetPassword);
+router.post("/login",logIn);
+router.get("/getAll",isloggedIn,getAll);
+router.get("/logOut",isloggedIn,logOut);
+router.get("/verifyEmail/:id",verify);
+router.post("/forgotPassword",forgotPassword);
+router.post("/resetPassword/:token",resetPassword);
 
 module.exports = router 

@@ -17,7 +17,6 @@ exports.signUp = async (req,res)=>{
 
         const checkemail = await userModel.findOne({email});
         // console.log(checkemail)
-
         if(checkemail){
             return res.status(400).json({
                 message:"email already exist sign-up with another email "
@@ -29,10 +28,8 @@ exports.signUp = async (req,res)=>{
             message:"incorrect passsword"
         })
        }
-
-
-       const salt = bcrypt.genSaltSync(10);
-       const hash = bcrypt.hashSync(password,salt);
+       const salt = await bcrypt.genSaltSync(10);
+       const hash = await bcrypt.hashSync(password,salt);
 
 
        const user = await userModel.create({
@@ -60,7 +57,6 @@ exports.signUp = async (req,res)=>{
         data: user
     });
 
-        
 
     }catch(error){
         res.status(500).json({
