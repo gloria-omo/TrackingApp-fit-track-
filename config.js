@@ -4,7 +4,7 @@ require("dotenv").config();
 
 
 
-db = "mongodb+srv://gloriaakubor7:4wfM8aI0cWSZ1S7f@cluster0.vbeda5a.mongodb.net/Fittness-app"
+const db = process.env.dblink
 
 mongoose.connect(db)
 .then(()=>{
