@@ -12,9 +12,11 @@ exports.signUp = async (req,res)=>{
     try{
         const { companyName,email,phoneNumber,password,confrimPassword } = req.body
         const file = req.file.path;
+        // console.log(file);
+        
 
         const result = await cloudinary.uploader.upload(file);
-       console.log(result);
+    //    console.log(result);
 
         const checkemail = await userModel.findOne({email});
         // console.log(checkemail)
@@ -259,4 +261,35 @@ exports.resetPassword = async(req,res)=>{
     }
 }
 
+
+
+exports.checkTiralPeriod = async(req,res)=>{
+  try{
+     const id = req.session._id;
+
+     const user = await userModel.findById(id)
+     if(!user){
+        return res.status(400).json({
+            message:"Not a user"
+        })
+     }
+
+    const daySinceSignUp = Math.floor((Date.now() - user.startDate) - (1000 * 60 * 60 * 24)); 
+
+    if (daySinceSignUp <= 30){
+        return true
+    }else {
+        return res.status(400).json({
+           message: " Your trial period is over kindly subcribe for a plan " 
+        })
+    }
+
+
+  }
+  catch(error){
+    res.status(500).json({
+        error:error.massage
+    })
+}
+}
         

@@ -1,13 +1,13 @@
 const express = require("express");
 const { signUp, logIn, getAll, logOut, verify, forgotPassword, resetPassword } = require("../controllers/userController");
-const uploader = require("../helpers/multer");
+const upload = require("../helpers/multer");
 const validation = require("../middlewares/validation");
 const { isloggedIn } = require("../middlewares/authentication");
 const router = express.Router();
 
 
 
-router.post("/sign-up",uploader.single("profilePicture"),validation,signUp);
+router.post("/sign-up",upload.single("profilePicture"),validation,signUp);
 router.post("/login",logIn);
 router.get("/getAll",isloggedIn,getAll);
 router.get("/logOut",isloggedIn,logOut);

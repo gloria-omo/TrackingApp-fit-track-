@@ -23,6 +23,18 @@ const userSchema = new mongoose.Schema({
     isVerify:{
         type:Boolean,
         default:false
+    },
+    signUpStartDate:{
+        type:Date,
+        default:Date.now
+    },
+    isSubscribed:{
+        type:Boolean,
+        default:false
+    },
+     SubscriptionPlan:{
+        type:String,
+        default:null
     }
 },{timestamps:true})
 

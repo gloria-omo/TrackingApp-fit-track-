@@ -2,16 +2,16 @@ const mongoose = require("mongoose");
 
 const clientSchema = new mongoose.Schema({
     userId:{
-        type:mongoose.Schema.Types.ObjectId,
+        type:mongoose.SchemaTypes.ObjectId,
         ref:"userModel"
     },
-    name:{
+    fullName:{
         type:String,
         required:true
     },
     plan:{
-        type:String
-
+        type:mongoose.SchemaTypes.ObjectId,
+        ref:"planModel"
     },
     isActive:{
         type:Boolean,
