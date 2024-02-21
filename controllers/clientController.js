@@ -60,7 +60,41 @@ exports.getAll = async(req,res)=>{
         })
     }
 }
+
+exports.getOne = async (req,res)=>{
+    try{
+
+    }catch(error){
+        res.status(200).json({
+            message:error.message
+        })
+    }
+}
  
+
+exports.creatPlan = async(req,res)=>{
+    try{
+     const id = req.params.id;
+    const {plan} = req.body;
+
+    const user = await clientModel.findById(id)
+
+    user.plan = plan;
+
+    user.save()
+
+    // const userPlan = await clientModel.create({plan});
+
+    res.status(200).json({
+        message: "Plan created"
+    })
+
+    }catch(error){
+        res.status(500).json({
+            message:error.message
+        })
+    }
+}
 
 exports.getOne = async(req,res)=>{
     try{
