@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema({
         type:Date,
         default:Date.now
     },
+    blackList:{
+        type:Array,
+        default:String
+       },
     isSubscribed:{
         type:Boolean,
         default:false

@@ -1,45 +1,27 @@
+const clientModel = require("../models/clientModel");
 const userModel = require("../models/userModel");
-const clientModel = require("../models/clientModel");
-const bcrypt = require("bcrypt");
-const cloudinary = require("../helpers/cloudinary");
-const upload = require("../helpers/multer")
-const jwt = require("jsonwebtoken");
-const clientModel = require("../models/clientModel");
+// const planModel = require("../models/planModel");
 
-exports.signUp = async (req,res)=>{
+
+exports.createClient = async (req,res)=>{
     try{
-        const { companyName,email,phoneNumber,password,confrimPassword } = req.body
-        const file = req.file.path
-
-        const checkemail = await userModel.findOne({email});
-        // console.log(checkemail)
-
-        if(checkemail){
+        const id = req.user.userId;
+        const { fullName, plan} = req.body;
+        if(!id){
             return res.status(400).json({
-                message:"email already exist sign-up with another email "
+                message: "You are not Log-in"
             })
         }
-       
-       if(password !== confrimPassword){
-        return res.status(400).json({
-            message:"incorrect passsword"
-        })
-       }
 
-
-       const salt = bcrypt.genSaltSync(10);
-       const hash = bcrypt.hashSync(password,salt);
-
-       const result = await cloudinary.uploader.upload(file);
-        console.log(result)
-
-       const user = await userModel.create({
-        companyName,
-        email,
-        phoneNumber,
-        password:hash,
-        profilePicture: result.secure_url
+       const user = await clientModel.create({
+        fullName,
+        plan,
+        status: (plan) ? true : false
        })
+
+       user.userId = id 
+
+       await user.save()
 
        res.status(200).json({
         message:"user created successfully",
@@ -54,48 +36,21 @@ exports.signUp = async (req,res)=>{
     }
 }
 
-exports.logIn = async(req,res)=>{
-    try{
-        const {email,password} = res.body;
 
-      const user = userModel.findOne({email});
-      if(!user){
-        return res.status(404).json({
-            message:"user not found"
-        })
-      }
-      const checkPassword = bcrypt.compareSync(password,user.password)
-      if(!checkPassword){
-        return res.status(401).json({
-            message:"incorrect password"
-        })
-      }
-      req.session.user = user;
-
-      res.status(200).json({
-            message:"logIn successfully"
-        })
-      
-
-    }catch(error){
-        res.status(500),json({
-            error:error.message
-        })
-    }
-}
 
 exports.getAll = async(req,res)=>{
     try{
-        const id = req.session.user._id;
-        const allUser = await clientModel.find();
-        if(user.length === 0){
+        const id = req.user.userId;
+        const allUser = await clientModel.find({userId:id});
+        console.log(allUser)
+        if(allUser.length === 0){
             return res.status(200).json({
-                message:"there are No user found"
+                message:"You have no user yet"
             })
         }
         res.status(200).json({
-            message:`There are ${user.length} user `,
-            totalNumbe:`${user.length}`,
+            message:`There are ${allUser.length} user `,
+            totalNumber:`${allUser.length}`,
             data:allUser
         })
 
@@ -105,18 +60,43 @@ exports.getAll = async(req,res)=>{
         })
     }
 }
+ 
 
-exports.logOut = async(req,res)=>{
+exports.getOne = async(req,res)=>{
     try{
-     req.session.destroy()
-     res.status(200).json({
-        message:"LogOut successfully"
-     })
+
     }catch(error){
         res.status(500).json({
-           error:`${error.message}` 
+            messsage : error.message
         })
     }
 }
 
+
+// Calculate remaining days for a plan
+exports.calculateRemainingDays = async (req, res) => {
+    try {
+
+        const userId = req.params.id;
+        const client = await clientModel.findOne({ userId });
+        if (!client) {
+            return res.status(404).json({ message: "Client not found" });
+        }
+        if (!client.planStartDate || !client.plan) {
+            return res.status(400).json({ message: "Plan start date or plan not set for the client" });
+        }
+        const millisecondsPerDay = 1000 * 60 * 60 * 24;
+        const planDurationInDays = {
+            "1Month": 30,
+            "2Month": 60,
+            "3Month": 90
+        };
+        const startDate = new Date(client.planStartDate);
+        const endDate = new Date(startDate.getTime() + planDurationInDays[client.plan] * millisecondsPerDay);
+        const remainingDays = Math.ceil((endDate - new Date()) / millisecondsPerDay);
+        res.status(200).json({ message: `Remaining days for the plan: ${remainingDays}`, remainingDays });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
         

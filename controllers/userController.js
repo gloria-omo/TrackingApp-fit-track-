@@ -10,7 +10,7 @@ require('dotenv').config()
 
 exports.signUp = async (req,res)=>{
     try{
-        const { companyName,email,phoneNumber,password,confrimPassword } = req.body
+        const { companyName,email,phoneNumber,password,confirmPassword } = req.body
         const file = req.file.path;
         // console.log(file);
         
@@ -26,7 +26,7 @@ exports.signUp = async (req,res)=>{
             })
         }
        
-       if(password !== confrimPassword){
+       if(password !== confirmPassword){
         return res.status(400).json({
             message:"incorrect passsword"
         })
@@ -44,7 +44,7 @@ exports.signUp = async (req,res)=>{
        })
 
        
-       const link = `${req.protocol}://${req.get('host')}/api/v1/verify-email/${user._id}`;
+       const link = `${req.protocol}://${req.get('host')}/api/v1/verifyEmail/${user._id}`;
     //    console.log(link)
 
         const html =await generateDynamicEmail(link, user.companyName.toUpperCase());
@@ -81,16 +81,28 @@ exports.logIn = async(req,res)=>{
             message:"user not found"
         })
       }
+      if(user.isVerify !== true){
+        return res.status(400).json({
+            message:`kindly verify you email with the link send to ${user.email}`
+        })
+      }
+
       const checkPassword = await bcrypt.compareSync(password,user.password)
       if(!checkPassword){
         return res.status(401).json({
             message:"incorrect password"
         })
       }
-      req.session.user = user;
+       //generate a token for the user
+       const token = jwt.sign({
+        userId: user._id,
+        email: user.email
+    }, process.env.jwtSecret, {expiresIn: "1d"})
 
       res.status(200).json({
-            message:"logIn successfully"
+            message:"logIn successfully",
+            data: user,
+            token
         })
       
 
@@ -107,7 +119,7 @@ exports.verify = async(req,res)=>{
 const id = req.params.id
 if(!id){
     return res.status(401).json({
-        message:"Unknow user id "
+        message:"Unknown user id "
     })
 }
 
@@ -147,19 +159,75 @@ exports.getAll = async(req,res)=>{
     }
 }
 
-exports.logOut = async(req,res)=>{
+//update a user function
+exports.updateUser = async (req,res)=>{
     try{
-     req.session.destroy()
-     res.status(200).json({
-        message:"LogOut successfully"
-     })
+    
+        //get the user id
+        const id = req.user.userId
+    
+        //instance of what the user can update
+        const data = {
+            companyName: req.body.companyName,
+            phoneNumber: req.body.phoneNumber,
+            password: req.body.password
+        }
+    
+        //update the user
+        const update = await userModel.findByIdAndUpdate(id,data,{new:true})
+    
+        //throw a response
+        res.status(200).json({
+            message: "user updated successfully",
+            updateData
+        })
+    
     }catch(error){
         res.status(500).json({
-           error:`${error.message}` 
+            error: error.message
+        })
+    }
+    }  
+
+
+
+//logout function
+exports.logOut = async(req,res)=>{
+    try {
+        // get the token 
+        const hasAuthor = req.headers.authorization
+
+        // extract the token
+        const token = hasAuthor.split(" ")[1]
+
+        //get the users id
+        const id = req.user.userId
+
+        // find the user 
+        const user = await userModel.findById(id) 
+
+        //check if the user exist
+        if (!user) {
+            return res.status(404).json({
+                error: "user not found"
+            })
+        }
+
+        // log the user out by pushing the token to blackList
+        user.blackList.push(token)
+        await user.save()
+
+        // thow a response
+        res.status(200).json({
+            message:"successfully logedOut"
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
         })
     }
 }
-
 
 
 exports.forgotPassword = async(req,res)=>{
@@ -263,9 +331,9 @@ exports.resetPassword = async(req,res)=>{
 
 
 
-exports.checkTiralPeriod = async(req,res)=>{
+exports.checkTrialPeriod = async(req,res,next)=>{
   try{
-     const id = req.session._id;
+     const id = req.user.userId;
 
      const user = await userModel.findById(id)
      if(!user){
@@ -274,17 +342,16 @@ exports.checkTiralPeriod = async(req,res)=>{
         })
      }
 
-    const daySinceSignUp = Math.floor((Date.now() - user.startDate) - (1000 * 60 * 60 * 24)); 
-
+    const daySinceSignUp = Math.floor((Date.now() - user.signUpStartDate) - (1000 * 60 * 60 * 24)); 
+     console.log(daySinceSignUp);
     if (daySinceSignUp <= 30){
-        return true
+        next()
     }else {
         return res.status(400).json({
            message: " Your trial period is over kindly subcribe for a plan " 
         })
     }
-
-
+    // console.log(daySinceSignUp);
   }
   catch(error){
     res.status(500).json({
@@ -292,4 +359,4 @@ exports.checkTiralPeriod = async(req,res)=>{
     })
 }
 }
-        
+       

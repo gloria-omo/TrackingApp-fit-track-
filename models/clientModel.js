@@ -10,9 +10,17 @@ const clientSchema = new mongoose.Schema({
         required:true
     },
     plan:{
-        type:mongoose.SchemaTypes.ObjectId,
-        ref:"planModel"
+        type:String,
+        enum:["1Month","2Month","3Month"]   
     },
+    status:{
+        type:Boolean,
+        default:false
+    },
+    PlanStartDate:{
+        type:Date,
+        default:Date.now  
+  },
     isActive:{
         type:Boolean,
         default:false

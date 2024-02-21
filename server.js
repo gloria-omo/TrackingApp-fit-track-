@@ -1,6 +1,7 @@
 const express = require("express");
 require("./config");
 const router = require("./routers/userRouter");
+const clientRouter = require("./routers/clientRouter")
 const multer = require("./helpers/multer");
 const session = require("express-session");
 require("dotenv").config();
@@ -26,6 +27,7 @@ app.get("/api/v1",(req,res)=>{
 });
 
 app.use("/api/v1",router);
+app.use(clientRouter); 
 
 port = process.env.port;
 app.listen(port,()=>{
