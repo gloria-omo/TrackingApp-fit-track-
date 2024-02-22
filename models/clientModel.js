@@ -9,6 +9,9 @@ const clientSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    membershipId:{
+        type:Number
+    },
     plan:{
         type:String,
         enum:["1Month","2Month","3Month"]   
@@ -19,12 +22,7 @@ const clientSchema = new mongoose.Schema({
     },
     PlanStartDate:{
         type:Date,
-        default:Date.now  
-  },
-    isActive:{
-        type:Boolean,
-        default:false
-    }
+  }
 },{timestamps:true})
 
 

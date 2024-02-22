@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
     },
     email:{
         type:String,
-        required:true
+        required:true,
+        unquie:true
     },
     phoneNumber:{
         type:String,
@@ -36,10 +37,16 @@ const userSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    SubscriptionDate:{
+        type:Date
+    },
      SubscriptionPlan:{
         type:String,
-        default:null
-    }
+    },
+    trial: {
+        type: Boolean,
+        default: true
+    },
 },{timestamps:true})
 
 const userModel = mongoose.model("user",userSchema);

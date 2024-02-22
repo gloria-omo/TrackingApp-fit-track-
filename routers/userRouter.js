@@ -1,5 +1,5 @@
 const express = require("express");
-const { signUp, logIn, getAll, logOut, verify, forgotPassword, resetPassword, } = require("../controllers/userController");
+const { signUp, logIn, getAll, logOut, verify, forgotPassword, resetPassword, updateSub, updateUser, } = require("../controllers/userController");
 const upload = require("../helpers/multer");
 const validation = require("../middlewares/validation");
 // const { isloggedIn } = require("../middlewares/authentication");
@@ -12,6 +12,8 @@ router.post("/sign-up",upload.single("profilePicture"),validation,signUp);
 router.post("/login",logIn);
 router.get("/getAll",authenticate,getAll);
 router.post("/logOut",authenticate,logOut);
+router.put("/updatasubscription",authenticate,updateSub);
+router.put("/updataUser",authenticate,updateUser);
 router.get("/verifyEmail/:id",verify);
 router.post("/forgotPassword",forgotPassword);
 router.post("/resetPassword/:token",resetPassword);

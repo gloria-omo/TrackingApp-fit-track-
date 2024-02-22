@@ -6,6 +6,7 @@ const upload = require("../helpers/multer");
 const jwt = require("jsonwebtoken");
 const generateDynamicEmail = require("../helpers/index");
 const sendEmail = require("../helpers/email");
+const { date } = require("joi");
 require('dotenv').config()
 
 exports.signUp = async (req,res)=>{
@@ -329,7 +330,29 @@ exports.resetPassword = async(req,res)=>{
     }
 }
 
+exports.updateSub =async(req,res)=>{
+    try{
+        const id = req.params.id;
+       
+        // const user = await userModel.findById(id);
 
+       const updataUser = await userModel.findByIdAndUpdate(id,{
+            trial: false,
+            isSubscribed: true,
+            SubscriptionDate: Date.now()
+        },{new:true});
+        await updataUser.save();
+        res.status(200).json({
+            message:'subscription successfully'
+        })
+
+
+    }catch(error){
+        res.status(500).json({
+            error:error.message
+        })
+    }
+}
 
 exports.checkTrialPeriod = async(req,res,next)=>{
   try{
@@ -342,9 +365,35 @@ exports.checkTrialPeriod = async(req,res,next)=>{
         })
      }
 
-    const daySinceSignUp = Math.floor((Date.now() - user.signUpStartDate) - (1000 * 60 * 60 * 24)); 
+     if(!user.trial){
+        function getDaysSinceRegistration(registrationDate) {
+            const oneDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
+            const currentDate = new Date();
+            const diffDays = Math.round(Math.abs((currentDate - registrationDate) / oneDay));
+            return diffDays;
+        };
+        const daySinceSignUp = getDaysSinceRegistration(user.signUpStartDate)
+             console.log(daySinceSignUp);
+            if (daySinceSignUp <= 90){
+                next()
+            }else {
+                return res.status(400).json({
+                   message: " Your subscription period is over kindly subcribe for a new plan " 
+                })
+            }
+     }
+
+
+// Function to calculate the number of days between two dates
+function getDaysSinceRegistration(registrationDate) {
+    const oneDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
+    const currentDate = new Date();
+    const diffDays = Math.round(Math.abs((currentDate - registrationDate) / oneDay));
+    return diffDays;
+};
+const daySinceSignUp = getDaysSinceRegistration(user.signUpStartDate)
      console.log(daySinceSignUp);
-    if (daySinceSignUp <= 30){
+    if (daySinceSignUp <= 14){
         next()
     }else {
         return res.status(400).json({
