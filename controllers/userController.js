@@ -175,7 +175,7 @@ exports.updateUser = async (req,res)=>{
         }
     
         //update the user
-        const update = await userModel.findByIdAndUpdate(id,data,{new:true})
+        const updateData = await userModel.findByIdAndUpdate(id,data,{new:true})
     
         //throw a response
         res.status(200).json({
