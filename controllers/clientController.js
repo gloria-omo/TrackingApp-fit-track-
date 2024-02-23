@@ -88,26 +88,46 @@ exports.batchOnboard = async (req, res) => {
                 console.error('Skipping user data due to missing fields:', userData);
                 continue; // Skip this user and proceed to the next one
             }
-            const membershipId = uuidv4 
+
+
+            // generate a random verification code
+const verifyToken = () => {
+    const digits = '0123456789';
+    let uniqueNumber = '';
+  
+    while (uniqueNumber.length < 4) {
+      const randomDigit = digits.charAt(Math.floor(Math.random() * digits.length));
+  
+      if (!uniqueNumber.includes(randomDigit)) {
+        uniqueNumber += randomDigit;
+      }
+    }
+  
+    return uniqueNumber;
+  };
+   
 
             // Create user
             if(!plan){
-            const newUser = await clientModel.create({ 
+            const newUser = new clientModel({ 
                 fullName,
-                membershipId,
+                membershipId: parseInt(verifyToken()),
                 status: false
             });
              newUser.userId = id
             await newUser.save();
 
+
            return res.status(201).json({ 
                 message: 'Batch onboarding successful' 
             });
+
+        // console.log( parseInt(verifyToken()))
         }
 
-        const user = await clientModel.create({
+        const user = new clientModel({
             fullName,
-            membershipId,
+            membershipId: parseInt(verifyToken()),
             plan,
             status:  true,
             PlanStartDate : Date.now()
@@ -116,6 +136,8 @@ exports.batchOnboard = async (req, res) => {
            user.userId = id 
     
            await user.save()
+
+        // console.log( parseInt(verifyToken()))
 
         }
         res.status(201).json({ 
@@ -295,7 +317,8 @@ exports.calculateRemainingDays = async (req, res) => {
 
 
 // Schedule the cron job to run every day at midnight
-cron.schedule('0 0 * * *', async () => {
+
+exports.schedule = cron.schedule("0 0 * * *", async () => {
     try {
         // Get all clients with active plans
         const clients = await clientModel.find({ status: true, plan: { $ne: null } });

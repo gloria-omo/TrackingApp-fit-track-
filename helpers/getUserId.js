@@ -3,7 +3,7 @@ const verifyToken = () => {
     const digits = '0123456789';
     let uniqueNumber = '';
   
-    while (uniqueNumber.length < 3) {
+    while (uniqueNumber.length < 4) {
       const randomDigit = digits.charAt(Math.floor(Math.random() * digits.length));
   
       if (!uniqueNumber.includes(randomDigit)) {

@@ -6,6 +6,7 @@ const multer = require("./helpers/multer");
 const session = require("express-session");
 require("dotenv").config();
 const cors = require("cors");
+const { schedule } = require("node-cron");
 
 
 
@@ -29,7 +30,16 @@ app.get("/api/v1",(req,res)=>{
 app.use("/api/v1",router);
 app.use(clientRouter); 
 
+
 port = process.env.port;
 app.listen(port,()=>{
     console.log(`server is listening to port: ${port}`)
 });
+
+
+process.on('SIGINT',async()=>{
+  await schedule.stop()
+  await schedule.close()
+  console.log("cron-job close")
+  process.exit(0)
+})
