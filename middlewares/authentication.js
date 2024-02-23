@@ -27,7 +27,14 @@ const authenticate = async (req,res,next)=>{
        
         
 
-        const user = await userModel.findById(decodeToken.userId)
+        const user = await userModel.findById(decodeToken.userId);
+
+        
+        if(!user){
+            return res.status(404).json({
+                error: "Authorization failed: user not found" 
+            })
+        }
 
         const check = user.blackList.includes(token);
 
@@ -38,11 +45,6 @@ const authenticate = async (req,res,next)=>{
         }
 
 
-        if(!user){
-            return res.status(404).json({
-                error: "Authorization failed: user not found" 
-            })
-        }
 
         req.user = decodeToken;
         next()
