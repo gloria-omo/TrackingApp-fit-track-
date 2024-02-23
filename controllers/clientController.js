@@ -33,9 +33,25 @@ exports.createClient = async (req,res)=>{
        })
         }
 
+              // generate a random verification code
+const verifyToken = () => {
+    const digits = '0123456789';
+    let uniqueNumber = '';
+  
+    while (uniqueNumber.length < 4) {
+      const randomDigit = digits.charAt(Math.floor(Math.random() * digits.length));
+  
+      if (!uniqueNumber.includes(randomDigit)) {
+        uniqueNumber += randomDigit;
+      }
+    }
+  
+    return uniqueNumber;
+  };
+
        const user = await clientModel.create({
         fullName,
-        membershipId:membershipId,
+        membershipId: parseInt(verifyToken()),
         plan,
         status:  true,
         PlanStartDate : Date.now()
