@@ -385,6 +385,11 @@ exports.deleteUser = async(req,res)=>{
    try{
     const id = req.params.id;
     const user = await clientModel.findByIdAndDelete(id);
+    if(!user){
+        return res.status(404).json({
+            message:"user has been deleted or does not exist"
+        })
+    }
 
     res.status(200).json({
         message:`${user.fullName} has been deleted successfully`
