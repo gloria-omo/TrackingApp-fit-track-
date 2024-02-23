@@ -367,6 +367,7 @@ const schedule = cron.schedule("0 0 * * *", async (req,res) => {
                 });
             }
         }
+        console.log(cron.schedule)
         console.log('Cron job executed successfully');
     } catch (error) {
         console.error('Error in cron job:', error);
