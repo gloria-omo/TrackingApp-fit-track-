@@ -12,6 +12,7 @@ require('dotenv').config()
 exports.signUp = async (req,res)=>{
     try{
         const { companyName,email,phoneNumber,password,confirmPassword } = req.body
+        
         const file = req.file.path;
         // console.log(file);
         
