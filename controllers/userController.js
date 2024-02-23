@@ -170,8 +170,7 @@ exports.updateUser = async (req,res)=>{
         //instance of what the user can update
         const data = {
             companyName: req.body.companyName,
-            phoneNumber: req.body.phoneNumber,
-            password: req.body.password
+            phoneNumber: req.body.phoneNumber
         }
     
         //update the user
