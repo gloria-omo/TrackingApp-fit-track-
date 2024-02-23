@@ -12,6 +12,11 @@ require('dotenv').config()
 exports.signUp = async (req,res)=>{
     try{
         const { companyName,email,phoneNumber,password,confirmPassword } = req.body
+        if(!{ companyName,email,phoneNumber,password,confirmPassword }){
+         return res.status(400).json({
+            message:"invaild format fields must not be left empty"
+         })
+        }
         
         const file = req.file.path;
         // console.log(file);
@@ -27,12 +32,17 @@ exports.signUp = async (req,res)=>{
                 message:"email already exist sign-up with another email "
             })
         }
+        
         if(!password){
           return res.status(400).json({
             message:"password should not be empty please input a password"
           })
         }
-       
+        if(password <= 8){
+            return res.status(400).json({
+                message:"password must not be less than 8"
+            })
+        }       
        if(password !== confirmPassword){
         return res.status(400).json({
             message:"incorrect passsword"
