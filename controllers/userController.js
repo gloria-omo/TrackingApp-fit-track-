@@ -27,7 +27,7 @@ exports.signUp = async (req,res)=>{
                 message:"email already exist sign-up with another email "
             })
         }
-        if(password === null){
+        if(!password){
           return res.status(400).json({
             message:"password should not be empty please input a password"
           })
