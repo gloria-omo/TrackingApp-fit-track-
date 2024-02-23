@@ -12,7 +12,7 @@ router.post("/sign-up",upload.single("profilePicture"),validation,signUp);
 router.post("/login",logIn);
 router.get("/getAll",authenticate,getAll);
 router.post("/logOut",authenticate,logOut);
-router.put("/updatasubscription",authenticate,updateSub);
+router.put("/updatasubscription/:id",authenticate,updateSub);
 router.put("/updateUser",authenticate,updateUser);
 router.get("/verifyEmail/:id",verify);
 router.post("/forgotPassword",forgotPassword);
