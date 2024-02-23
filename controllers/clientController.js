@@ -367,7 +367,6 @@ const schedule = cron.schedule("0 0 * * *", async (req,res) => {
                 });
             }
         }
-        console.log(cron.schedule)
         console.log('Cron job executed successfully');
     } catch (error) {
         console.error('Error in cron job:', error);
@@ -387,8 +386,8 @@ exports.deleteUser = async(req,res)=>{
     const id = req.params.id;
     const user = await clientModel.findByIdAndDelete(id);
 
-    res.staus(200).json({
-        message:"User deleted successfully"
+    res.status(200).json({
+        message:`${user.fullName} has been deleted successfully`
     })
 
 
