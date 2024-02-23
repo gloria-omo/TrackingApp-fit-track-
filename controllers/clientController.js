@@ -334,7 +334,7 @@ exports.calculateRemainingDays = async (req, res) => {
 
 // Schedule the cron job to run every day at midnight
 
-exports.schedule = cron.schedule("0 0 * * *", async () => {
+const schedule = cron.schedule("0 0 * * *", async (req,res) => {
     try {
         // Get all clients with active plans
         const clients = await clientModel.find({ status: true, plan: { $ne: null } });
@@ -352,8 +352,12 @@ exports.schedule = cron.schedule("0 0 * * *", async () => {
             const planDuration = planDurationInDays[client.plan];
             const endDate = new Date(planStartDate.getTime() + planDuration * 24 * 60 * 60 * 1000);
 
+         
+
             // Check if current date exceeds end date
             const currentDate = new Date();
+            const remainingDays = endDate - currentDate
+            console.log(remainingDays)
             if (currentDate > endDate) {
                 // Update client's plan status to false, plan to null, and PlanStartDate to null
                 await clientModel.findByIdAndUpdate(client._id, {
@@ -368,6 +372,13 @@ exports.schedule = cron.schedule("0 0 * * *", async () => {
         console.error('Error in cron job:', error);
     }
 });
+
+// Middleware function using the cron job
+exports.cronMiddleware = (req, res, next) => {
+    // Start the cron job
+    schedule.start();
+    next();
+};
 
 
 exports.deleteUser = async(req,res)=>{
