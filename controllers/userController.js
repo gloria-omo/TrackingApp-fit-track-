@@ -38,7 +38,9 @@ exports.signUp = async (req,res)=>{
 
  // Function to validate email 
  function validateEmail(email) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const regex = /^[^\s@]+@gmail\.com$/;
+    // const regex = /^[^\s@]+@(gmail\.com|email\.com|yahoo\.com)$/;
+
     return regex.test(email);
 }
 if (!validateEmail(email)) {
