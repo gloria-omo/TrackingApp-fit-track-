@@ -34,7 +34,7 @@ const generateDynamicEmail=( link,companyName)=> {
               </tr><!-- end tr -->
               <tr>
               <td valign="middle" style="padding: 3em 0 2em 0;">
-                <img src="../LOGO.jpg" alt="" style="width: 300px; max-width: 600px; height: auto; margin: auto; display: block;">
+                <img src="https://res.cloudinary.com/dgdsmfgx6/image/upload/v1708786391/cfg6deaecetlzrwupy24.jpg" alt="" style="width: 300px; max-width: 600px; height: auto; margin: auto; display: block;">
               </td>
               </tr><!-- end tr -->
                     <tr>
