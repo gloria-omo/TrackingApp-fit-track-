@@ -6,7 +6,7 @@ const authenticate = require("../middlewares/authentication");
 
 
 router.post("/addClient",authenticate,checkTrialPeriod,createClient);
-router.post("/addPlan",authenticate,checkTrialPeriod,createPlan);
+router.put("/addPlan/:id",authenticate,checkTrialPeriod,createPlan);
 router.get("/getAllMember",authenticate,getAll);
 router.get("/getoneMember",authenticate,checkTrialPeriod,getOne);
 router.post("/createBulkUser",authenticate,checkTrialPeriod,batchOnboard);
