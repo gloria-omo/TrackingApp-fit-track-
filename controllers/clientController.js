@@ -191,10 +191,11 @@ exports.getAll = async(req,res)=>{
                 message:"You have no user yet"
             })
         }
+         const active = allUser.status == true
         res.status(200).json({
             message:`There are ${allUser.length} user `,
             totalNumber:`${allUser.length}`,
-            activeMember:`${allUser.status === true.length}`,
+            activeMember:`${active.length}`,
             data:allUser
         })
 
@@ -231,7 +232,10 @@ exports.createPlan = async(req,res)=>{
     const PlanStartDate = new Date();
     const formattedPlanStartDate = `${PlanStartDate.getDate()}/${PlanStartDate.getMonth() + 1}/${PlanStartDate.getFullYear()}`
 
-    const user = await clientModel.findByIdAndUpdate(id,{plan:plan,planStartDate:formattedPlanStartDate,status:true},{new:true})
+    const user = await clientModel.findByIdAndUpdate(id,{
+        plan:plan,
+        planStartDate: formattedPlanStartDate,
+        status:true},{new:true})
 
     // user.plan = plan;
 
