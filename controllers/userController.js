@@ -5,6 +5,7 @@ const upload = require("../helpers/multer");
 // const session = require("express-session");
 const jwt = require("jsonwebtoken");
 const generateDynamicEmail = require("../helpers/index");
+const resetPasswordEmail = require("../helpers/resetindex")
 const sendEmail = require("../helpers/email");
 const { date } = require("joi");
 require('dotenv').config()
@@ -292,7 +293,7 @@ exports.forgotPassword = async(req,res)=>{
          console.log(token)
 
          const link = `${req.protocol}://${req.get('host')}/api/v1/reset-password/${token}`;
-        const html = generateDynamicEmail(link, user.companyName.toUpperCase());
+        const html = resetPasswordEmail(link, user.companyName.toUpperCase());
         await sendEmail({
             email: user.email,
             subject:'reset password',
