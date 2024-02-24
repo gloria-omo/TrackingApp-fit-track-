@@ -15,7 +15,7 @@ exports.signUp = async (req,res)=>{
         const { companyName,email,phoneNumber,password,confirmPassword } = req.body
         if(!{ companyName,email,phoneNumber,password,confirmPassword }){
          return res.status(400).json({
-            message:"invaild format fields must not be left empty"
+            message:"Invaild format fields must not be left empty"
          })
         }
 
@@ -53,23 +53,23 @@ if (!validateEmail(email)) {
         // console.log(checkemail)
         if(checkemail){
             return res.status(400).json({
-                message:"email already exist sign-up with another email "
+                message:"Email already exist sign-up with another email "
             })
         }
 
         if(!password){
           return res.status(400).json({
-            message:"password should not be empty please input a password"
+            message:"Password should not be empty please input a password"
           })
         }
         if(password <= 8){
             return res.status(400).json({
-                message:"password must not be less than 8"
+                message:"Password must not be less than 8"
             })
         }       
        if(password !== confirmPassword){
         return res.status(400).json({
-            message:"incorrect passsword"
+            message:"Incorrect passsword"
         })
        }
        const salt = await bcrypt.genSaltSync(10);
@@ -115,23 +115,28 @@ if (!validateEmail(email)) {
 exports.logIn = async(req,res)=>{
     try{
         const {email,password} = req.body;
+        if(!{email,password}){
+            return res.status(400).json({
+                message: "Invaild format : Field should not be empty"
+            })
+        }
 
       const user = await userModel.findOne({email});
       if(!user){
         return res.status(404).json({
-            message:"user not found"
+            message:"User not found"
         })
       }
       if(user.isVerify !== true){
         return res.status(400).json({
-            message:`kindly verify you email with the link send to ${user.email}`
+            message:`Kindly verify you email with the link send to ${user.email}`
         })
       }
 
       const checkPassword = await bcrypt.compareSync(password,user.password)
       if(!checkPassword){
         return res.status(401).json({
-            message:"incorrect password"
+            message:"Incorrect password"
         })
       }
        //generate a token for the user
@@ -141,7 +146,7 @@ exports.logIn = async(req,res)=>{
     }, process.env.jwtSecret, {expiresIn: "1d"})
 
       res.status(200).json({
-            message:"logIn successfully",
+            message:"LogIn successfully",
             data: user,
             token
         })
@@ -167,7 +172,7 @@ if(!id){
 const user = await userModel.findByIdAndUpdate(id,{isVerify:true},{new:true})
 
 res.status(200).json({
-    message:`user with email:${user.email} is verify successfully`
+    message:`User with email:${user.email} is verify successfully`
     
 })
 }catch(error){
@@ -185,7 +190,7 @@ exports.getAll = async(req,res)=>{
         const allUser = await userModel.find();
         if(allUser.length === 0){
             return res.status(200).json({
-                message:"there are No user found"
+                message:"There are No user found"
             })
         }
         res.status(200).json({
@@ -218,7 +223,7 @@ exports.updateUser = async (req,res)=>{
     
         //throw a response
         res.status(200).json({
-            message: "user updated successfully",
+            message: "User updated successfully",
             updateData
         })
     
@@ -249,7 +254,7 @@ exports.logOut = async(req,res)=>{
         //check if the user exist
         if (!user) {
             return res.status(404).json({
-                error: "user not found"
+                error: "User not found"
             })
         }
 
@@ -259,7 +264,7 @@ exports.logOut = async(req,res)=>{
 
         // thow a response
         res.status(200).json({
-            message:"successfully logedOut"
+            message:"Successfully logedOut"
         })
 
     } catch (error) {
@@ -283,7 +288,7 @@ exports.forgotPassword = async(req,res)=>{
 
         if(!user){
             return res.status(404).json({
-                message:"user not found"
+                message:"User not found"
 
             })
         }
@@ -296,13 +301,13 @@ exports.forgotPassword = async(req,res)=>{
         const html = resetPasswordEmail(link, user.companyName.toUpperCase());
         await sendEmail({
             email: user.email,
-            subject:'reset password',
+            subject:'Reset password',
             html
         });
 
         // send a respond
         res.status(200).json({
-            message:"reset password email sent successfully"
+            message:"Reset password email sent successfully"
         });
 
 
@@ -324,7 +329,7 @@ exports.resetPassword = async(req,res)=>{
 
         if(newPassword !== confirmPassword){
             return res.status(400).json({
-                message : "incorrect passsword"
+                message : "Incorrect passsword"
             })
         }
 
@@ -340,7 +345,7 @@ exports.resetPassword = async(req,res)=>{
 
        if(!user){
         return res.status(404).json({
-            message:"user not found"
+            message:"User not found"
 
         })
        };
@@ -357,8 +362,8 @@ exports.resetPassword = async(req,res)=>{
        await user.save();
     //    send a success message
     res.status(200).json({
-        message:"password reset sucessfully",
-        user
+        message:"Password reset sucessfully",
+        data: user
     })
 
     }
@@ -382,7 +387,7 @@ exports.updateSub =async(req,res)=>{
         },{new:true});
         await updataUser.save();
         res.status(200).json({
-            message:'subscription successfully'
+            message:'Subscription successfully'
         })
 
 
