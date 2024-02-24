@@ -194,6 +194,7 @@ exports.getAll = async(req,res)=>{
         res.status(200).json({
             message:`There are ${allUser.length} user `,
             totalNumber:`${allUser.length}`,
+            activeMember:`${allUser.status === true.length}`,
             data:allUser
         })
 
@@ -229,7 +230,7 @@ exports.createPlan = async(req,res)=>{
 
     const PlanStartDate = new Date();
     const formattedPlanStartDate = `${PlanStartDate.getDate()}/${PlanStartDate.getMonth() + 1}/${PlanStartDate.getFullYear()}`
-    
+
     const user = await clientModel.findByIdAndUpdate(id,{plan:plan,planStartDate:formattedPlanStartDate,status:true},{new:true})
 
     // user.plan = plan;
@@ -239,7 +240,8 @@ exports.createPlan = async(req,res)=>{
     // const userPlan = await clientModel.create({plan});
 
     res.status(200).json({
-        message: "Plan created"
+        message: "Plan created",
+        data: user
     })
 
     }catch(error){
