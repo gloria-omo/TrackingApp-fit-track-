@@ -234,8 +234,8 @@ exports.createPlan = async(req,res)=>{
 
     const user = await clientModel.findByIdAndUpdate(id,{
         plan:plan,
-        planStartDate: formattedPlanStartDate,
-        status:true},{new:true})
+        PlanStartDate: formattedPlanStartDate,
+        status:true},{new: true})
 
     // user.plan = plan;
 
