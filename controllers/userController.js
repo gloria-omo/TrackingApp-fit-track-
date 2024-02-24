@@ -292,7 +292,7 @@ exports.forgotPassword = async(req,res)=>{
          const token = jwt.sign({userId:user._id},process.env.jwtSecret,{expiresIn:"10m"});
          console.log(token)
 
-         const link = `${req.protocol}://${req.get('host')}/api/v1/reset-password/${token}`;
+         const link = `${req.protocol}://${req.get('host')}/api/v1/resetPassword/${token}`;
         const html = resetPasswordEmail(link, user.companyName.toUpperCase());
         await sendEmail({
             email: user.email,

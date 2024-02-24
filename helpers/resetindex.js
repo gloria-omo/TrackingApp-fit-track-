@@ -43,7 +43,7 @@ const resetPasswordEmail=( link,companyName)=> {
                     <tr>
                         <td>
                             <div style="padding: 0 2.5em; text-align: center;">
-                                <h2 style="font-family: 'Lato', sans-serif; color: rgba(0,0,0,.3); font-size: 40px; margin-bottom: 0; font-weight: 400;">Please verify your email</h2>
+                                <h2 style="font-family: 'Lato', sans-serif; color: rgba(0,0,0,.3); font-size: 40px; margin-bottom: 0; font-weight: 400;">Password Reset</h2>
                                 <h3 style="font-family: 'Lato', sans-serif; font-size: 24px; font-weight: 300;">Hello, ${companyName},<br/>
                                 We received a request to reset your password. If you did not make this request, please ignore this email.
                                 
