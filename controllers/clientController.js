@@ -393,7 +393,7 @@ const schedule = cron.schedule("0 0 * * *", async (req,res) => {
 exports.cronMiddleware = (req, res, next) => {
     // Start the cron job
     schedule.start();
-    next();
+    // next();
 };
 
 
