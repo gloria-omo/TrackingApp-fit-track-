@@ -16,24 +16,7 @@ exports.createClient = async (req,res)=>{
                 message: "You are not Log-in"
             })
         };
-     
-        if(!plan){      
-       const user = await clientModel.create({
-        fullName,
-        membershipId:membershipId,
-        status: false
-       });
-       user.userId = id 
-
-       await user.save()
-
-       return res.status(200).json({
-        message:"user created successfully",
-        data:user
-       })
-        }
-
-              // generate a random verification code
+           // generate a random verification code
 const verifyToken = () => {
     const digits = '0123456789';
     let uniqueNumber = '';
@@ -48,13 +31,34 @@ const verifyToken = () => {
   
     return uniqueNumber;
   };
+       
 
+        if(!plan){      
+       const user = await clientModel.create({
+        fullName,
+        membershipId: parseInt(verifyToken()),
+        status: false
+       });
+       user.userId = id 
+
+       await user.save()
+
+       return res.status(200).json({
+        message:"user created successfully",
+        data:user
+       })
+        }
+
+        
+  const PlanStartDate = new Date();
+  const formattedPlanStartDate = `${PlanStartDate.getDate()}/${PlanStartDate.getMonth() + 1}/${PlanStartDate.getFullYear()}`
+  
        const user = await clientModel.create({
         fullName,
         membershipId: parseInt(verifyToken()),
         plan,
         status:  true,
-        PlanStartDate : Date.now()
+        PlanStartDate :formattedPlanStartDate
        })
 
        user.userId = id 
@@ -141,12 +145,15 @@ const verifyToken = () => {
         // console.log( parseInt(verifyToken()))
         }
 
+        const PlanStartDate = new Date();
+        const formattedPlanStartDate = `${PlanStartDate.getDate()}/${PlanStartDate.getMonth() + 1}/${PlanStartDate.getFullYear()}`
+
         const user = new clientModel({
             fullName,
             membershipId: parseInt(verifyToken()),
             plan,
             status:  true,
-            PlanStartDate : Date.now()
+            PlanStartDate : formattedPlanStartDate 
            })
     
            user.userId = id 
@@ -220,9 +227,12 @@ exports.createPlan = async(req,res)=>{
      const id = req.params.id;
     const {plan} = req.body;
 
-    const user = await clientModel.findById(id)
+    const PlanStartDate = new Date();
+    const formattedPlanStartDate = `${PlanStartDate.getDate()}/${PlanStartDate.getMonth() + 1}/${PlanStartDate.getFullYear()}`
+    
+    const user = await clientModel.findByIdAndUpdate(id,{plan:plan,planStartDate:formattedPlanStartDate,status:true},{new:true})
 
-    user.plan = plan;
+    // user.plan = plan;
 
     await user.save()
 
