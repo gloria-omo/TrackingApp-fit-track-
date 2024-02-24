@@ -17,7 +17,17 @@ exports.signUp = async (req,res)=>{
             message:"invaild format fields must not be left empty"
          })
         }
-        
+
+        // Function to validate company name
+      function validateCompanyName(companyName) {
+     const regex = /^[a-zA-Z\s]+$/;
+      return regex.test(companyName);
+    }
+    if (!validateCompanyName(companyName)) {
+        return res.status(400).json({
+             message: 'Company name must contain only alphabet characters' 
+            });
+    }
         const file = req.file.path;
         // console.log(file);
         
@@ -32,7 +42,7 @@ exports.signUp = async (req,res)=>{
                 message:"email already exist sign-up with another email "
             })
         }
-        
+
         if(!password){
           return res.status(400).json({
             message:"password should not be empty please input a password"
