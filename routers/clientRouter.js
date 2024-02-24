@@ -10,7 +10,7 @@ router.put("/addPlan/:id",authenticate,checkTrialPeriod,createPlan);
 router.get("/getAllMember",authenticate,getAll);
 router.get("/getoneMember",authenticate,checkTrialPeriod,getOne);
 router.post("/createBulkUser",authenticate,checkTrialPeriod,batchOnboard);
-router.get("/daysremaining/:id",authenticate,checkTrialPeriod,cronMiddleware);
+router.get("/daysremainingCron/:id",authenticate,checkTrialPeriod,cronMiddleware);
 router.get("/daysremaining/:id",authenticate,checkTrialPeriod,calculateRemainingDays);
 router.delete("/delete/:id",authenticate,checkTrialPeriod,deleteUser);
 
