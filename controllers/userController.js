@@ -23,6 +23,7 @@ exports.signUp = async (req,res)=>{
      const regex = /^[a-zA-Z\s]+$/;
       return regex.test(companyName);
     }
+       
     if (!validateCompanyName(companyName)) {
         return res.status(400).json({
              message: 'Company name must contain only alphabet characters' 
@@ -35,6 +36,16 @@ exports.signUp = async (req,res)=>{
         const result = await cloudinary.uploader.upload(file);
     //    console.log(result);
 
+ // Function to validate email 
+ function validateEmail(email) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
+if (!validateEmail(email)) {
+    return res.status(400).json({
+         message:  'Invalid email address'  
+        });
+}
         const checkemail = await userModel.findOne({email});
         // console.log(checkemail)
         if(checkemail){
