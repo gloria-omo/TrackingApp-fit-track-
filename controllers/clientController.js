@@ -414,10 +414,10 @@ const scheduler = cron.schedule("* * * * *", async (req,res) => {
             const planStartDate = new Date(client.PlanStartDate);
             const planDuration = planDurationInDays[client.plan];
             const endDate = new Date(planStartDate.getTime() + planDuration * 24 * 60 * 60 * 1000);
-            console.log("i am client"+client.PlanStartDate )
-            console.log("i am plan sart"+planStartDate)
-            console.log("i am lan duratio"+ planDuration)
-            console.log("i am end date"+endDate);
+            console.log("i am client "+client.PlanStartDate )
+            console.log("i am plan start "+planStartDate)
+            console.log("i am lan duration "+ planDuration)
+            console.log("i am end date "+endDate);
 
          
 
@@ -425,6 +425,10 @@ const scheduler = cron.schedule("* * * * *", async (req,res) => {
             const currentDate = new Date();
             const remainingDays = endDate - currentDate
             console.log(remainingDays)
+            // Calculate the number of days
+          const days = remainingDays / (1000 * 60 * 60 * 24);
+          console.log(days)
+
             if (currentDate > endDate) {
                 // Update client's plan status to false, plan to null, and PlanStartDate to null
                 await clientModel.findByIdAndUpdate(client._id, {
@@ -434,6 +438,10 @@ const scheduler = cron.schedule("* * * * *", async (req,res) => {
                 });
             }
         }
+        
+        res.status(200).json({
+            message:`you have ${days} days remaining`
+        })
         console.log('Cron job executed successfully');
     } catch (error) {
         console.error('Error in cron job:', error);
