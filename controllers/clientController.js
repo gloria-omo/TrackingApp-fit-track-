@@ -397,7 +397,7 @@ exports.calculateRemainingDays = async (req, res) => {
 
 // Schedule the cron job to run every day at midnight
 
-const scheduler = cron.schedule("0 0 * * *", async (req,res) => {
+const scheduler = cron.schedule("* * * * *", async (req,res) => {
     try {
         // Get all clients with active plans
         const clients = await clientModel.find({ status: true, plan: { $ne: null } });
