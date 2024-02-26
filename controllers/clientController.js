@@ -365,7 +365,7 @@ exports.calculateRemainingDays = async (req, res) => {
         }
         
         // Loop through each client
-        for (const client of clients) {
+        for (const clients of clients) {
             const planDurationInDays = {
                 "1Month": 30,    
                 "2Month": 60,
@@ -373,10 +373,10 @@ exports.calculateRemainingDays = async (req, res) => {
             };
 
             // Calculate end date of plan
-            const planStartDate = new Date(client.PlanStartDate);
-            const planDuration = planDurationInDays[client.plan];
+            const planStartDate = new Date(clients.PlanStartDate);
+            const planDuration = planDurationInDays[clients.plan];
             const endDate = new Date(planStartDate.getTime() + planDuration * 24 * 60 * 60 * 1000);
-            console.log("i am client "+client.PlanStartDate )
+            console.log("i am client "+clients.PlanStartDate )
             console.log("i am plan start "+planStartDate)
             console.log("i am lan duration "+ planDuration)
             console.log("i am end date "+endDate);
