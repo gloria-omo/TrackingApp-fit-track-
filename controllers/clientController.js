@@ -384,7 +384,7 @@ exports.calculateRemainingDays = async (req, res) => {
     const remainingDays = endDate - currentDate
     console.log(remainingDays)
     // Calculate the number of days
-  const days = remainingDays / (1000 * 60 * 60 * 24);
+  const days = Math.abs(remainingDays / (1000 * 60 * 60 * 24));
   console.log(days)
         
         res.status(200).json({ 
