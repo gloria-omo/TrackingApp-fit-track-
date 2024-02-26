@@ -50,15 +50,15 @@ const verifyToken = () => {
         }
 
         
-  const PlanStartDate = new Date();
-  const formattedPlanStartDate = `${PlanStartDate.getDate()}/${PlanStartDate.getMonth() + 1}/${PlanStartDate.getFullYear()}`
+//   const PlanStartDate = new Date();
+//   const formattedPlanStartDate = `${PlanStartDate.getDate()}/${PlanStartDate.getMonth() + 1}/${PlanStartDate.getFullYear()}`
   
        const user = await clientModel.create({
         fullName,
         membershipId: parseInt(verifyToken()),
         plan,
         status:  true,
-        PlanStartDate :formattedPlanStartDate
+        PlanStartDate : Date.now()
        })
 
        user.userId = id 
@@ -145,15 +145,15 @@ const verifyToken = () => {
         // console.log( parseInt(verifyToken()))
         }
 
-        const PlanStartDate = new Date();
-        const formattedPlanStartDate = `${PlanStartDate.getDate()}/${PlanStartDate.getMonth() + 1}/${PlanStartDate.getFullYear()}`
+        // const PlanStartDate = new Date();
+        // const formattedPlanStartDate = `${PlanStartDate.getDate()}/${PlanStartDate.getMonth() + 1}/${PlanStartDate.getFullYear()}`
 
         const user = new clientModel({
             fullName,
             membershipId: parseInt(verifyToken()),
             plan,
             status:  true,
-            PlanStartDate : formattedPlanStartDate 
+            PlanStartDate : Date.now() 
            })
     
            user.userId = id 
@@ -276,12 +276,12 @@ exports.createPlan = async(req,res)=>{
      const id = req.params.id;
     const {plan} = req.body;
 
-    const PlanStartDate = new Date();
-    const formattedPlanStartDate = `${PlanStartDate.getDate()}/${PlanStartDate.getMonth() + 1}/${PlanStartDate.getFullYear()}`
+    // const PlanStartDate = new Date();
+    // const formattedPlanStartDate = `${PlanStartDate.getDate()}/${PlanStartDate.getMonth() + 1}/${PlanStartDate.getFullYear()}`
 
     const user = await clientModel.findByIdAndUpdate(id,{
         plan:plan,
-        PlanStartDate: formattedPlanStartDate,
+        PlanStartDate: Date.now(),
         status:true},{new: true})
 
     // user.plan = plan;
@@ -414,7 +414,10 @@ const scheduler = cron.schedule("* * * * *", async (req,res) => {
             const planStartDate = new Date(client.PlanStartDate);
             const planDuration = planDurationInDays[client.plan];
             const endDate = new Date(planStartDate.getTime() + planDuration * 24 * 60 * 60 * 1000);
-            console.log(endDate);
+            console.log("i am client"+client.PlanStartDate )
+            console.log("i am plan sart"+planStartDate)
+            console.log("i am lan duratio"+ planDuration)
+            console.log("i am end date"+endDate);
 
          
 

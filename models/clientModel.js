@@ -21,7 +21,7 @@ const clientSchema = new mongoose.Schema({
         default:false
     },
     PlanStartDate:{
-        type:String,
+        type:Date,
   }
 },{timestamps:true})
 
