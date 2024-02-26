@@ -191,11 +191,9 @@ exports.getAll = async(req,res)=>{
                 message:"You have no user yet"
             })
         }
-         const active = allUser.status == true
         res.status(200).json({
             message:`There are ${allUser.length} user `,
             totalNumber:`${allUser.length}`,
-            activeMember:`${active.length}`,
             data:allUser
         })
 
@@ -205,6 +203,55 @@ exports.getAll = async(req,res)=>{
         })
     }
 }
+
+
+exports.getAllActiveMember = async(req,res)=>{
+    try{
+        const id = req.user.userId;
+        const activeUser = await clientModel.find({userId:id,status: true, plan: { $ne: null } });
+        // console.log(activeUser)
+        if(activeUser.length === 0){
+            return res.status(200).json({
+                message:"You have no user yet"
+            })
+        }
+        res.status(200).json({
+            message:`There are ${activeUser.length} user `,
+            totalNumberOfActiveMember:`${activeUser.length}`,
+            data:activeUser
+        })
+
+    }catch(error){
+        res.status(500).json({
+           error:`${error.message}` 
+        })
+    }
+}
+
+
+exports.getAllNonActiveMember = async(req,res)=>{
+    try{
+        const id = req.user.userId;
+        const nonactiveUser = await clientModel.find({userId:id,status: false });
+        // console.log(nonactiveUser)
+        if(nonactiveUser.length === 0){
+            return res.status(200).json({
+                message:"You have no user yet"
+            })
+        }
+        res.status(200).json({
+            message:`There are ${nonactiveUser.length} user `,
+            totalNumberOfNonActiveMember:`${nonactiveUser.length}`,
+            data:nonactiveUser
+        })
+
+    }catch(error){
+        res.status(500).json({
+           error:`${error.message}` 
+        })
+    }
+}
+
 
 exports.getOne = async(req,res)=>{
     try{
@@ -350,7 +397,7 @@ exports.calculateRemainingDays = async (req, res) => {
 
 // Schedule the cron job to run every day at midnight
 
-const schedule = cron.schedule("0 0 * * *", async (req,res) => {
+const scheduler = cron.schedule("0 0 * * *", async (req,res) => {
     try {
         // Get all clients with active plans
         const clients = await clientModel.find({ status: true, plan: { $ne: null } });
@@ -367,6 +414,7 @@ const schedule = cron.schedule("0 0 * * *", async (req,res) => {
             const planStartDate = new Date(client.PlanStartDate);
             const planDuration = planDurationInDays[client.plan];
             const endDate = new Date(planStartDate.getTime() + planDuration * 24 * 60 * 60 * 1000);
+            console.log(endDate);
 
          
 
@@ -392,7 +440,7 @@ const schedule = cron.schedule("0 0 * * *", async (req,res) => {
 // Middleware function using the cron job
 exports.cronMiddleware = (req, res, next) => {
     // Start the cron job
-    schedule.start();
+    scheduler.start();
     // next();
 };
 
