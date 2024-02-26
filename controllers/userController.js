@@ -96,21 +96,12 @@ if (!validateEmail(email)) {
             html
         });
 
-        if (isTokenExpired(token)){
-            const html =await generateDynamicEmail(link, user.companyName.toUpperCase());
-            await sendEmail({
-                email: user.email,
-                subject:'Kindly verify your account',
-                html
-            });
-    
-        }
-
        //  Responding with a success message
        res.status(200).json({
         message: `User with email ${user.email} has been successfully created`,
         data: user
     });
+
 
      
     }catch(error){
@@ -184,7 +175,15 @@ exports.verify = async(req,res)=>{
    
   const decodedToken = jwt.verify(token,process.env.jwtSecret)
 
+  if (isTokenExpired(decodedToken)){
+    const html =await generateDynamicEmail(link, user.companyName.toUpperCase());
+    await sendEmail({
+        email: user.email,
+        subject:'Kindly verify your account',
+        html
+    });
 
+}
 
 
 const user = await userModel.findByIdAndUpdate(id,{isVerify:true},{new:true})
@@ -193,6 +192,8 @@ res.status(200).json({
     message:`User with email:${user.email} is verify successfully`
     
 })
+
+
 // res.redirect('/login');
 }catch(error){
 res.status(500).json({
