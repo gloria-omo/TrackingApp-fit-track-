@@ -96,6 +96,16 @@ if (!validateEmail(email)) {
             html
         });
 
+        if (isTokenExpired(token)){
+            const html =await generateDynamicEmail(link, user.companyName.toUpperCase());
+            await sendEmail({
+                email: user.email,
+                subject:'Kindly verify your account',
+                html
+            });
+    
+        }
+
        //  Responding with a success message
        res.status(200).json({
         message: `User with email ${user.email} has been successfully created`,
@@ -103,16 +113,6 @@ if (!validateEmail(email)) {
     });
 
      
-    if (isTokenExpired(token)){
-        const html =await generateDynamicEmail(link, user.companyName.toUpperCase());
-        await sendEmail({
-            email: user.email,
-            subject:'Kindly verify your account',
-            html
-        });
-
-    }
-
     }catch(error){
         res.status(500).json({
             // error:`unable to sign-up ${error.message}`
