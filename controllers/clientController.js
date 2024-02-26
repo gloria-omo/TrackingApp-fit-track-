@@ -360,32 +360,40 @@ exports.calculateRemainingDays = async (req, res) => {
             return res.status(400).json({ message: "Plan start date or plan not set for the client" });
         }
         
-        function getDaysSinceRegistration(registrationDate) {
-            const oneDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
+        // Loop through each client
+        for (const client of client) {
+            const planDurationInDays = {
+                "1Month": 30,    
+                "2Month": 60,
+                "3Month": 90
+            };
+
+            // Calculate end date of plan
+            const planStartDate = new Date(client.PlanStartDate);
+            const planDuration = planDurationInDays[client.plan];
+            const endDate = new Date(planStartDate.getTime() + planDuration * 24 * 60 * 60 * 1000);
+            console.log("i am client "+client.PlanStartDate )
+            console.log("i am plan start "+planStartDate)
+            console.log("i am lan duration "+ planDuration)
+            console.log("i am end date "+endDate);
+
+         
+
+            // Check if current date exceeds end date
             const currentDate = new Date();
-            const diffDays = Math.round(Math.abs((currentDate - registrationDate) / oneDay));
-            return diffDays;
-        };
+            const remainingDays = endDate - currentDate
+            console.log(remainingDays)
+            // Calculate the number of days
+          const days = remainingDays / (1000 * 60 * 60 * 24);
+          console.log(days)
 
-        const daysSinceSignUp = getDaysSinceRegistration(new Date(client.PlanStartDate));
-
-        const planDurationInDays = {
-            "1Month": 30,    
-            "2Month": 60,
-            "3Month": 90
-        };
-
-        const planDuration = planDurationInDays[client.plan];
-        const endDate = new Date(client.PlanStartDate);
-        endDate.setDate(endDate.getDate() + planDuration * daysSinceSignUp);
-
-        const remainingDays = Math.ceil((endDate - new Date()) / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
-        
+            
         res.status(200).json({ 
-            message: `Remaining days for the plan: ${remainingDays}`, 
-            remainingDays 
+            message: `Remaining days for the plan: ${days}`, 
+            days 
         });
-    } catch (error) {
+    } 
+}catch (error) {
         res.status(500).json({ 
             error: error.message
          });
@@ -437,11 +445,11 @@ const scheduler = cron.schedule("* * * * *", async (req,res) => {
                     PlanStartDate: null
                 });
             }
+            // return res.status(200).json({
+            //     message:`you have ${days} days remaining`
+            // })
         }
         
-        res.status(200).json({
-            message:`you have ${days} days remaining`
-        })
         console.log('Cron job executed successfully');
     } catch (error) {
         console.error('Error in cron job:', error);
