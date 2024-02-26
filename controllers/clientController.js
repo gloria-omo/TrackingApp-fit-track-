@@ -350,18 +350,22 @@ exports.createPlan = async(req,res)=>{
 exports.calculateRemainingDays = async (req, res) => {
     try {
         const id = req.params.id;
-        const client = await clientModel.findById(id );
+        const clients = await clientModel.findById(id );
         
         if (!client) {
-            return res.status(404).json({ message: "Client not found" });
+            return res.status(404).json({ 
+                message: "Client not found" 
+            });
         }
 
         if (!client.PlanStartDate || !client.plan) {
-            return res.status(400).json({ message: "Plan start date or plan not set for the client" });
+            return res.status(400).json({
+                 message: "Plan start date or plan not set for the client" 
+                });
         }
         
         // Loop through each client
-        for (const client of client) {
+        for (const client of clients) {
             const planDurationInDays = {
                 "1Month": 30,    
                 "2Month": 60,
