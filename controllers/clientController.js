@@ -352,13 +352,13 @@ exports.calculateRemainingDays = async (req, res) => {
         const id = req.params.id;
         const clients = await clientModel.findById(id );
         
-        if (!client) {
+        if (!clients) {
             return res.status(404).json({ 
                 message: "Client not found" 
             });
         }
 
-        if (!client.PlanStartDate || !client.plan) {
+        if (!clients.PlanStartDate || !clients.plan) {
             return res.status(400).json({
                  message: "Plan start date or plan not set for the client" 
                 });
