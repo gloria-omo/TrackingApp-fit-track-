@@ -175,7 +175,10 @@ exports.verify = async(req,res)=>{
    
   const decodedToken = jwt.verify(token,process.env.jwtSecret)
 
-  if (isTokenExpired(decodedToken)){
+  if (!decodedToken){
+    const token = jwt.sign({userId:user._id},process.env.jwtSecret,{expiresIn:"10m"});
+       
+    const link = `${req.protocol}://${req.get('host')}/api/v1/verifyEmail/${user._id}/${token} `;
     const html =await generateDynamicEmail(link, user.companyName.toUpperCase());
     await sendEmail({
         email: user.email,
