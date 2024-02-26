@@ -14,7 +14,7 @@ router.get("/getAll",authenticate,getAll);
 router.post("/logOut",authenticate,logOut);
 router.put("/updatasubscription/:id",authenticate,updateSub);
 router.put("/updateUser",authenticate,updateUser);
-router.get("/verifyEmail/:id",verify);
+router.get("/verifyEmail/:id/:token",verify);
 router.post("/forgotPassword",forgotPassword);
 router.post("/resetPassword/:token",resetPassword);
 // router.get("/checkperiod/:id",checkTrialPeriod);

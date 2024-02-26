@@ -83,9 +83,10 @@ if (!validateEmail(email)) {
         password:hash,
         profilePicture: result.secure_url
        })
-
+     
+       const token = jwt.sign({userId:user._id},process.env.jwtSecret,{expiresIn:"10m"});
        
-       const link = `${req.protocol}://${req.get('host')}/api/v1/verifyEmail/${user._id}`;
+       const link = `${req.protocol}://${req.get('host')}/api/v1/verifyEmail/${user._id}/${token} `;
     //    console.log(link)
 
         const html =await generateDynamicEmail(link, user.companyName.toUpperCase());
@@ -101,6 +102,16 @@ if (!validateEmail(email)) {
         data: user
     });
 
+     
+    if (isTokenExpired(token)){
+        const html =await generateDynamicEmail(link, user.companyName.toUpperCase());
+        await sendEmail({
+            email: user.email,
+            subject:'Kindly verify your account',
+            html
+        });
+
+    }
 
     }catch(error){
         res.status(500).json({
@@ -162,12 +173,19 @@ exports.logIn = async(req,res)=>{
 
 exports.verify = async(req,res)=>{
     try{
-const id = req.params.id
-if(!id){
+  const id = req.params.id;
+
+  if(!id){
     return res.status(401).json({
         message:"Unknown user id "
     })
 }
+  const token = req.params.token;
+   
+  const decodedToken = jwt.verify(token,process.env.jwtSecret)
+
+
+
 
 const user = await userModel.findByIdAndUpdate(id,{isVerify:true},{new:true})
 
@@ -175,6 +193,7 @@ res.status(200).json({
     message:`User with email:${user.email} is verify successfully`
     
 })
+// res.redirect('/login');
 }catch(error){
 res.status(500).json({
     error: error.message
