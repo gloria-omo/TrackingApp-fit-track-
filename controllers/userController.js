@@ -30,17 +30,16 @@ exports.signUp = async (req,res)=>{
              message: 'Company name must contain only alphabet characters' 
             });
     }
-        const file = req.file;
+    console.log(req.file)
+    console.log(req.file.mimetype.startsWith('image/'))
+        const file = req.file.path;
 
-        // console.log(req.file);
-        if(file.mimetype !== 'image/'){
+        if(req.file.mimetype.startsWith('image/') === false){
             return res.status(400).json({
                 message:"File type not supported, Image only" 
             })
         }
-        
-
-        const result = await cloudinary.uploader.upload(file.path);
+        const result = await cloudinary.uploader.upload(file);
     //    console.log(result);
 
  // Function to validate email 
