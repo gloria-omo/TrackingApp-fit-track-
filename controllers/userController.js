@@ -30,11 +30,17 @@ exports.signUp = async (req,res)=>{
              message: 'Company name must contain only alphabet characters' 
             });
     }
-        const file = req.file.path;
-        // console.log(file);
+        const file = req.file;
+
+        // console.log(req.file);
+        if(file.mimetype !== 'image/'){
+            return res.status(400).json({
+                message:"File type not supported, Image only" 
+            })
+        }
         
 
-        const result = await cloudinary.uploader.upload(file);
+        const result = await cloudinary.uploader.upload(file.path);
     //    console.log(result);
 
  // Function to validate email 
@@ -87,7 +93,7 @@ if (!validateEmail(email)) {
        const token = jwt.sign({userId:user._id},process.env.jwtSecret,{expiresIn:"10m"});
        
        const link = `${req.protocol}://${req.get('host')}/api/v1/verifyEmail/${user._id}/${token} `;
-    //    console.log(link)
+       console.log(`${req.get('host')}`)
 
         const html =await generateDynamicEmail(link, user.companyName.toUpperCase());
         await sendEmail({
