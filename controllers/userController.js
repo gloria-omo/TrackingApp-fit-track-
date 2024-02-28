@@ -24,7 +24,7 @@ exports.signUp = async (req,res)=>{
      const regex = /^[a-zA-Z\s]+$/;
       return regex.test(companyName);
     }
-       
+    
     if (!validateCompanyName(companyName)) {
         return res.status(400).json({
              message: 'Company name must contain only alphabet characters' 
