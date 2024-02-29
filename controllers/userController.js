@@ -34,11 +34,6 @@ exports.signUp = async (req,res)=>{
     console.log(req.file.mimetype.startsWith('image/'))
         const file = req.file.path;
 
-        if(req.file.mimetype.startsWith('image/') === false){
-            return res.status(400).json({
-                message:"File type not supported, Image only" 
-            })
-        }
         const result = await cloudinary.uploader.upload(file);
     //    console.log(result);
 
