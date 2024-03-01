@@ -197,7 +197,8 @@ res.status(200).json({
 })
 
 
-// res.redirect('/login');
+ // res.status( 200 ).redirect( `${req.protocol}://${req.get("host")}/api/v1/log-in` );
+
 }catch(error){
 res.status(500).json({
     error: error.message
