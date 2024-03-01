@@ -25,12 +25,26 @@ exports.signUp = async (req,res)=>{
      const regex = /^[a-zA-Z\s]+$/;
       return regex.test(companyName);
     }
-    
+      
     if (!validateCompanyName(companyName)) {
         return res.status(400).json({
              message: 'Company name must contain only alphabet characters' 
             });
     }
+
+      // Function to validate phone number
+      function validatephoneNumber(phoneNumber) {
+        const regex = /^[0-9]+$/;
+         return regex.test(phoneNumber);
+       }
+
+       if (!validatephoneNumber(phoneNumber)) {
+        return res.status(400).json({
+             message: 'phone Number must contain only numbers' 
+            });
+    }
+
+       
     console.log(req.file.mimetype)
         const file = req.file.path;
         // if (req.file.mimetype!='image/.jpg') {
