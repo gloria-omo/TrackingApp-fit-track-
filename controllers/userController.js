@@ -12,6 +12,7 @@ require('dotenv').config()
 
 exports.signUp = async (req,res)=>{
     try{
+
         const { companyName,email,phoneNumber,password,confirmPassword } = req.body
         if(!{ companyName,email,phoneNumber,password,confirmPassword }){
          return res.status(400).json({
@@ -30,10 +31,17 @@ exports.signUp = async (req,res)=>{
              message: 'Company name must contain only alphabet characters' 
             });
     }
-    console.log(req.file)
-    console.log(req.file.mimetype.startsWith('image/'))
+    console.log(req.file.mimetype)
         const file = req.file.path;
+        // if (req.file.mimetype!='image/.jpg') {
+        //     return res.status(500).json("Unsupported file format")
+        // } 
 
+        // if(!req.file.mimetype.startsWith('image/') ){ 
+        //     return res.status(400).json({
+        //         message:"File type not supported, Image only" 
+        //     })
+        // }
         const result = await cloudinary.uploader.upload(file);
     //    console.log(result);
 
@@ -197,8 +205,7 @@ res.status(200).json({
 })
 
 
- // res.status( 200 ).redirect( `${req.protocol}://${req.get("host")}/api/v1/log-in` );
-
+// res.status( 200 ).redirect( `${req.protocol}://${req.get("host")}/api/log-in` );
 }catch(error){
 res.status(500).json({
     error: error.message
