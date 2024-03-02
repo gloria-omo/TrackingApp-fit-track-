@@ -45,7 +45,7 @@ exports.signUp = async (req,res)=>{
     }
 
        
-    console.log(req.file.mimetype)
+    // console.log(req.file.mimetype)
         const file = req.file.path;
         // if (req.file.mimetype!='image/.jpg') {
         //     return res.status(500).json("Unsupported file format")
@@ -213,10 +213,10 @@ exports.verify = async(req,res)=>{
 
 const user = await userModel.findByIdAndUpdate(id,{isVerify:true},{new:true})
 
-res.status(200).json({
-    message:`User with email:${user.email} is verify successfully`
+// res.status(200).json({
+//     message:`User with email:${user.email} is verify successfully`
     
-})
+// })
 
 
  res.status( 200 ).redirect( `https://plan-pulse.vercel.app/user-login` );
