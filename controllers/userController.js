@@ -91,7 +91,7 @@ if (!validateEmail(email)) {
         }       
        if(password !== confirmPassword){
         return res.status(400).json({
-            message:"Incorrect passsword"
+            message:" Password and confirm password not a match"
         })
        }
        const salt = await bcrypt.genSaltSync(10);
@@ -219,7 +219,7 @@ res.status(200).json({
 })
 
 
-// res.status( 200 ).redirect( `${req.protocol}://${req.get("host")}/api/log-in` );
+ res.status( 200 ).redirect( `https://plan-pulse.vercel.app/user-login` );
 }catch(error){
 res.status(500).json({
     error: error.message
@@ -374,7 +374,7 @@ exports.resetPassword = async(req,res)=>{
 
         if(newPassword !== confirmPassword){
             return res.status(400).json({
-                message : "Incorrect passsword"
+                message : " Password and confirm password not a match"
             })
         }
 
