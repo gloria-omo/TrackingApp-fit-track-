@@ -213,13 +213,13 @@ exports.verify = async(req,res)=>{
 
 const user = await userModel.findByIdAndUpdate(id,{isVerify:true},{new:true})
 
-res.status(200).json({
-    message:`User with email:${user.email} is verify successfully`
+// res.status(200).json({
+//     message:`User with email:${user.email} is verify successfully`
     
-})
+// })
 
 
-//  res.status( 200 ).redirect( `https://plan-pulse.vercel.app/user-login` );
+  res.status( 200 ).redirect( `https://plan-pulse.vercel.app/#/user-login` );
 }catch(error){
 res.status(500).json({
     error: error.message
