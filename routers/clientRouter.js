@@ -18,6 +18,4 @@ router.delete("/delete/:id",authenticate,checkTrialPeriod,deleteUser);
 
 
 
-
-
 module.exports = router

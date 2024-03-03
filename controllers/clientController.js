@@ -253,6 +253,55 @@ exports.getAllNonActiveMember = async(req,res)=>{
 }
 
 
+exports.getAllUsersWithOneMonthPlan = async (req, res) => {
+    try {
+        const id = req.user.userId;
+        const users = await clientModel.find({userId:id ,plan: "1Month" });
+        res.status(200).json({
+            message: `Users with 1Month plan`,
+            data: users
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        });
+    }
+};
+
+
+exports.getAllUsersWithTwoMonthPlan = async (req, res) => {
+    try {
+        const id = req.user.userId;
+        const users = await clientModel.find({ userId:id,plan: "2Month" });
+        res.status(200).json({
+            message: `Users with 2Month plan`,
+            data: users
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        });
+    }
+};
+
+
+exports.getAllUsersWithThreeMonthPlan = async (req, res) => {
+    try {
+        const id = req.user.userId;
+        const users = await clientModel.find({ userId:id,plan: "3Month" });
+        res.status(200).json({
+            message: `Users with 3Month plan`,
+            data: users
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        });
+    }
+};
+
+
+
 exports.getOne = async(req,res)=>{
     try{
         const id = req.params.id
@@ -301,7 +350,6 @@ exports.createPlan = async(req,res)=>{
         })
     }
 }
-
 
 
 // // Calculate remaining days for a plan
