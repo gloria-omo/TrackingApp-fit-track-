@@ -472,8 +472,12 @@ exports.deleteUser = async(req,res)=>{
         })
     }
 
+    const remainingUsers = await clientModel.find();
+
     res.status(200).json({
-        message:`${user.fullName} has been deleted successfully`
+        message:`${user.fullName} has been deleted successfully`,
+        data:remainingUsers
+
     })
 
 
