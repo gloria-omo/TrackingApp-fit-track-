@@ -145,7 +145,7 @@ exports.logIn = async(req,res)=>{
             })
         }
 
-      const user = await userModel.findOne({email});
+      const user = await userModel.findOne({email:email.toLowerCase()});
       if(!user){
         return res.status(404).json({
             message:"User not found"
