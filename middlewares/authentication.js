@@ -52,7 +52,7 @@ const authenticate = async (req,res,next)=>{
     }catch(error){
 
         if(error instanceof jwt.JsonWebTokenError){
-            return res.json({
+            return res.status(500).json({
                 message: "session Timeout"
             })
         }
