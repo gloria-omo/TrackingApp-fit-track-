@@ -139,7 +139,8 @@ const verifyToken = () => {
 
 
            return res.status(201).json({ 
-                message: 'Batch onboarding successful' 
+                message: 'Batch onboarding successful' ,
+                data:newUser
             });
 
         // console.log( parseInt(verifyToken()))
@@ -164,9 +165,9 @@ const verifyToken = () => {
 
         }
         res.status(201).json({ 
-            message: 'Batch onboarding successful' 
+            message: 'Batch onboarding successful' ,
+            data:user
         });
-
 
        
     } catch (error) {
@@ -191,6 +192,9 @@ exports.getAll = async(req,res)=>{
                 message:"You have no user yet"
             })
         }
+        const active = await clientModel.find({userId:id,status: true, plan: { $ne: null } });
+        const nonactive = await clientModel.find({userId:id,status: false });
+        const oneMonth = await clientModel.find({userId:id ,plan: "1Month" });
         res.status(200).json({
             message:`There are ${allUser.length} user `,
             totalNumber:`${allUser.length}`,
