@@ -156,9 +156,9 @@ const verifyToken = () => {
             status:  true,
             PlanStartDate : Date.now() 
            })
-    
+         console.log(user)
            user.userId = id 
-    
+          console.log(user)
            await user.save()
 
         // console.log( parseInt(verifyToken()))
