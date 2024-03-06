@@ -139,8 +139,7 @@ const verifyToken = () => {
 
 
            return res.status(201).json({ 
-                message: 'Batch onboarding successful' ,
-                data:newUser
+                message: 'Batch onboarding successful' 
             });
 
         // console.log( parseInt(verifyToken()))
@@ -156,18 +155,18 @@ const verifyToken = () => {
             status:  true,
             PlanStartDate : Date.now() 
            })
-         console.log(user)
+    
            user.userId = id 
-          console.log(user)
+    
            await user.save()
 
         // console.log( parseInt(verifyToken()))
 
         }
         res.status(201).json({ 
-            message: 'Batch onboarding successful' ,
-            data:user
+            message: 'Batch onboarding successful' 
         });
+
 
        
     } catch (error) {
@@ -194,7 +193,7 @@ exports.getAll = async(req,res)=>{
         }
         const active = await clientModel.find({userId:id,status: true, plan: { $ne: null } });
         const nonactive = await clientModel.find({userId:id,status: false });
-        const oneMonth = await clientModel.find({userId:id ,plan: "1Month" });
+        const oneMonth = await clientModel.find({userId:id,status: false });
         res.status(200).json({
             message:`There are ${allUser.length} user `,
             totalNumber:`${allUser.length}`,
